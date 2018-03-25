@@ -5,6 +5,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates
 {
     public interface ICommandPredicate
     {
-        Task<bool> IsThat(Update update);
+        bool IsDefault { get; }
+        Task<bool> IsThisCommand(Update update);
     }
 }

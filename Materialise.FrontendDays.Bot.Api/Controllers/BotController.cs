@@ -32,7 +32,7 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
             }
 
             _logger.LogDebug($"User {userId} sends next message: '{update.Message.Text}'");
-            await _commandsStrategy.Resolve(update.Message.Text).ExecuteAsync(update);
+            await (await _commandsStrategy.ResolveAsync(update)).ExecuteAsync(update);
 
             return Ok();
         }

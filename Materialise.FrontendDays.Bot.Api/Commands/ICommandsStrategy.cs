@@ -1,7 +1,10 @@
-﻿namespace Materialise.FrontendDays.Bot.Api.Commands
+﻿using System.Threading.Tasks;
+using Telegram.Bot.Types;
+
+namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public interface ICommandsStrategy
     {
-        ICommand Resolve(string command);
+        Task<ICommand> ResolveAsync(Update update);
     }
 }

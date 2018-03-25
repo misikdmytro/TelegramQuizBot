@@ -4,6 +4,7 @@ using Materialise.FrontendDays.Bot.Api.Extensions;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
+using Materialise.FrontendDays.Bot.Api.Services.Contracts;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -18,10 +19,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         private readonly ILogger<PlayGameCommand> _logger;
         private readonly IDbRepository<Models.User> _usersRepository;
         private readonly RequestEmailCommand _requestEmailCommand;
+        private readonly IUserRegistrationService _registrationService;
 
         public PlayGameCommand(TelegramBotClient botClient, NextQuestionCommand nextQuestionCommand,
-            Localization localization, ILogger<PlayGameCommand> logger, IUserAnswerRepository userAnswerRepository, 
-            IDbRepository<Models.User> usersRepository, RequestEmailCommand requestEmailCommand)
+            Localization localization, ILogger<PlayGameCommand> logger, 
+            IDbRepository<Models.User> usersRepository, RequestEmailCommand requestEmailCommand, 
+            IUserRegistrationService registrationService)
         {
             _botClient = botClient;
             _nextQuestionCommand = nextQuestionCommand;
@@ -29,29 +32,14 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
             _logger = logger;
             _usersRepository = usersRepository;
             _requestEmailCommand = requestEmailCommand;
+            _registrationService = registrationService;
         }
 
         public async Task ExecuteAsync(Update update)
         {
-            if (!(await _usersRepository.FindAsync(x => x.Id == update.Message.From.Id)).Any())
-            {
-                var newUser = new Models.User
-                {
-                    LastName = update.Message.From.LastName,
-                    Id = update.Message.From.Id,
-                    FirstName = update.Message.From.FirstName,
-                    Username = update.Message.From.Username,
-                    ChatId = update.Message.Chat.Id,
-                };
+            var user = await _registrationService.RegisterIfNotExists(update);
 
-                _logger.LogDebug($"New user registered: {newUser.FirstName} {newUser.LastName}");
-                await _usersRepository.AddAsync(newUser);
-            }
-
-            _logger.LogDebug($"User {update.Message.From.Id} starts game");
-
-            var user = (await _usersRepository.FindAsync(x => x.Id == update.Message.From.Id))
-                .First();
+            _logger.LogDebug($"User {update.Message.From.Id} tries to start game");
 
             if (user.NeedEmailInfo())
             {

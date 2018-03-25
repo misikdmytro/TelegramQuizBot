@@ -6,7 +6,6 @@ using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
-using Materialise.FrontendDays.Bot.Api.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
@@ -26,12 +25,11 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
         private readonly TelegramBotClient _botClient;
         private readonly Localization _localization;
         private readonly ILogger<AdminController> _logger;
-        private readonly IUserService _userService;
 
         public AdminController(Question[] questions, IDbRepository<Question> questionRepository,
             IDbRepository<Answer> answersRepository, IUserAnswerRepository userAnswerRepository,
             IDbRepository<User> userRepository, TelegramBotClient botClient, Localization localization,
-            ILogger<AdminController> logger, IUserService userService)
+            ILogger<AdminController> logger)
         {
             _questions = questions;
             _questionRepository = questionRepository;
@@ -41,7 +39,6 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
             _botClient = botClient;
             _localization = localization;
             _logger = logger;
-            _userService = userService;
         }
 
         [HttpGet]
@@ -68,6 +65,16 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
                 await _questionRepository.AddAsync(question);
             }
 
+            var users = await _userRepository.FindAsync(x => true);
+
+            foreach (var user in users)
+            {
+                user.UserStatus = UserStatus.ReadyForPlay;
+                user.IsWinner = false;
+
+                await _userRepository.UpdateAsync(user);
+            }
+
             _logger.LogDebug("DB updated");
 
             await RemoveWinner();
@@ -89,7 +96,7 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
                 return Ok(winner);
             }
 
-            var possibleWinners = await _userService.GetPossibleWinnersAsync();
+            var possibleWinners = await _userRepository.FindAsync(u => u.UserStatus == UserStatus.Answered);
 
             if (!possibleWinners.Any())
             {

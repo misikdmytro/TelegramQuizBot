@@ -4,6 +4,7 @@
     {
         NewUser,
         WaitForEmail,
+        ReadyForPlay,
         Player,
         Answered,
         Failed

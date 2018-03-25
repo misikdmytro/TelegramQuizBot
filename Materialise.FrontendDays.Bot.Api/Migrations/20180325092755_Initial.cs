@@ -28,9 +28,11 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
                 {
                     Id = table.Column<int>(nullable: false),
                     ChatId = table.Column<long>(nullable: false),
+                    Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     IsWinner = table.Column<bool>(nullable: false),
                     LastName = table.Column<string>(nullable: true),
+                    UserStatus = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

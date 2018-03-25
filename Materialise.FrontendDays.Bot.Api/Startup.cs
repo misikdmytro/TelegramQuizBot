@@ -4,6 +4,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Materialise.FrontendDays.Bot.Api.Builders;
 using Materialise.FrontendDays.Bot.Api.Commands;
+using Materialise.FrontendDays.Bot.Api.Commands.Predicates;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Models;
@@ -41,6 +42,12 @@ namespace Materialise.FrontendDays.Bot.Api
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "basic";
+                options.DefaultChallengeScheme = "basic";
+            });
+
             var builder = new ContainerBuilder();
 
             builder.Register(c => new BotInfo(Configuration["botToken"], Configuration["hostUrl"]))
@@ -55,11 +62,32 @@ namespace Materialise.FrontendDays.Bot.Api
                 return bot.InitializeAsync().Result;
             }).AsSelf().SingleInstance();
 
+            builder.RegisterType<RequestEmailPredicate>()
+                .AsSelf();
+
+            builder.RegisterType<ResponseEmailPredicate>()
+                .AsSelf();
+
+            builder.RegisterType<StartPredicate>()
+                .AsSelf();
+
+            builder.RegisterType<PlayGamePredicate>()
+                .AsSelf();
+
+            builder.RegisterType<AnswerPredicate>()
+                .AsSelf();
+
+            builder.RegisterType<DefaultPredicate>()
+                .AsSelf();
+
             builder.Register(context => new CommandsStrategy(context.Resolve<IComponentContext>(), new[]
                 {
-                    new KeyValuePair<string, Type>("/start", typeof(StartCommand)),
-                    new KeyValuePair<string, Type>("/play", typeof(PlayGameCommand)),
-                    new KeyValuePair<string, Type>("default", typeof(AnswerCommand))
+                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<RequestEmailPredicate>(), typeof(RequestEmailCommand)),
+                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<ResponseEmailPredicate>(), typeof(ResponseEmailCommand)),
+                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<StartPredicate>(), typeof(StartCommand)),
+                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<PlayGamePredicate>(), typeof(PlayGameCommand)),
+                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<AnswerPredicate>(), typeof(AnswerCommand)),
+                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<DefaultPredicate>(), typeof(DefaultCommand))
                 }))
                 .As<ICommandsStrategy>()
                 .SingleInstance();
@@ -79,6 +107,15 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<GameFinishedCommand>()
                 .AsSelf();
 
+            builder.RegisterType<RequestEmailCommand>()
+                .AsSelf();
+
+            builder.RegisterType<ResponseEmailCommand>()
+                .AsSelf();
+
+            builder.RegisterType<DefaultCommand>()
+                .AsSelf();
+
             builder.RegisterType<DbRepository<User>>()
                 .As<IDbRepository<User>>();
 
@@ -91,8 +128,8 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<UserAnswerRepository>()
                 .As<IUserAnswerRepository>();
 
-            builder.RegisterType<UserService>()
-                .As<IUserService>();
+            builder.RegisterType<UserRegistrationService>()
+                .As<IUserRegistrationService>();
 
             builder.Register(context => Configuration.GetSection("questions").Get<Question[]>())
                 .AsSelf();
@@ -138,6 +175,8 @@ namespace Materialise.FrontendDays.Bot.Api
             }
 
             app.UseMvc();
+
+            app.UseAuthentication();
         }
     }
 }
