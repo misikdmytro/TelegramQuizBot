@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Materialise.FrontendDays.Bot.Api.Extensions;
 using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
@@ -69,7 +70,10 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
 
             foreach (var user in users)
             {
-                user.UserStatus = UserStatus.ReadyForPlay;
+                user.UserStatus = user.NeedEmailInfo() 
+                    ? user.UserStatus 
+                    : UserStatus.ReadyForPlay;
+
                 user.IsWinner = false;
 
                 await _userRepository.UpdateAsync(user);

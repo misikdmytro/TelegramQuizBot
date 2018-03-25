@@ -32,23 +32,20 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
             _logger.LogDebug($"User {userId} answers {answer}");
 
             var userAnswer = (await _userAnswerRepository.FindAsync(x => x.UserId == userId && x.IsCorrect == null))
-                .FirstOrDefault();
+                .First();
 
-            if (userAnswer != null)
-            {
-                userAnswer.RealAnswer = answer;
+            userAnswer.RealAnswer = answer;
 
-                userAnswer.IsCorrect = (await _answerRepository
-                    .FindAsync(x => x.QuestionId == userAnswer.QuestionId
-                                    && x.Text.Equals(answer, StringComparison.InvariantCultureIgnoreCase)))
-                    .Any(x => x.IsCorrect);
+            userAnswer.IsCorrect = (await _answerRepository
+                .FindAsync(x => x.QuestionId == userAnswer.QuestionId
+                                && x.Text.Equals(answer, StringComparison.InvariantCultureIgnoreCase)))
+                .Any(x => x.IsCorrect);
 
-                _logger.LogDebug("User answers " + (userAnswer.IsCorrect == true ? "correct" : "incorrect"));
+            _logger.LogDebug("User answers " + (userAnswer.IsCorrect == true ? "correct" : "incorrect"));
 
-                await _userAnswerRepository.UpdateAsync(userAnswer);
+            await _userAnswerRepository.UpdateAsync(userAnswer);
 
-                await _nextQuestionCommand.ExecuteAsync(update);
-            }
+            await _nextQuestionCommand.ExecuteAsync(update);
         }
     }
 }

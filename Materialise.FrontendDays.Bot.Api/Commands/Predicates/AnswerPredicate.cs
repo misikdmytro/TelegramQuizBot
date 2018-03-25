@@ -9,7 +9,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates
 {
     public class AnswerPredicate : ICommandPredicate
     {
-        private readonly IDbRepository<Models.User> _usersRepository;
+        private readonly IDbRepository<User> _usersRepository;
 
         public AnswerPredicate(IDbRepository<User> usersRepository)
         {
