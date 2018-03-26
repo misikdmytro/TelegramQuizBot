@@ -14,6 +14,8 @@ namespace Materialise.FrontendDays.Bot.Api.Configurations
             builder.Property(x => x.LastName);
             builder.Property(x => x.Username);
             builder.Property(x => x.ChatId);
+            builder.Property(x => x.IsWinner).HasDefaultValue(false);
+            builder.Property(x => x.UserStatus).HasDefaultValue(UserStatus.NewUser);
         }
     }
 }

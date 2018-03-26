@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Materialise.FrontendDays.Bot.Api.Builders;
 using Materialise.FrontendDays.Bot.Api.Commands;
+using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
 using Materialise.FrontendDays.Bot.Api.Commands.Predicates;
+using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Filters;
+using Materialise.FrontendDays.Bot.Api.Helpers;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
 using Materialise.FrontendDays.Bot.Api.Services;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;
+using Materialise.FrontendDays.Bot.Api.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -146,7 +149,8 @@ namespace Materialise.FrontendDays.Bot.Api
                 .AsSelf()
                 .SingleInstance();
 
-            builder.RegisterType<KeyboardBuilder>().As<IKeyboardBuilder>();
+            builder.RegisterType<MessageSender>().AsSelf();
+            builder.RegisterType<EmailValidator>().AsSelf();
 
             var admins = Configuration.GetSection("admins").Get<Admin[]>();
 

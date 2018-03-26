@@ -1,34 +1,35 @@
 ﻿using System.Threading.Tasks;
+using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
+using Materialise.FrontendDays.Bot.Api.Helpers;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class PlayGameCommand : ICommand
     {
-        private readonly TelegramBotClient _botClient;
         private readonly NextQuestionCommand _nextQuestionCommand;
         private readonly Localization _localization;
         private readonly ILogger<PlayGameCommand> _logger;
         private readonly IDbRepository<Models.User> _usersRepository;
         private readonly IUserRegistrationService _registrationService;
+        private readonly MessageSender _messageSender;
 
-        public PlayGameCommand(TelegramBotClient botClient, NextQuestionCommand nextQuestionCommand,
+        public PlayGameCommand(NextQuestionCommand nextQuestionCommand,
             Localization localization, ILogger<PlayGameCommand> logger,
             IDbRepository<Models.User> usersRepository,
-            IUserRegistrationService registrationService)
+            IUserRegistrationService registrationService, MessageSender messageSender)
         {
-            _botClient = botClient;
             _nextQuestionCommand = nextQuestionCommand;
             _localization = localization;
             _logger = logger;
             _usersRepository = usersRepository;
             _registrationService = registrationService;
+            _messageSender = messageSender;
         }
 
         public async Task ExecuteAsync(Update update)
@@ -40,7 +41,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
             user.UserStatus = UserStatus.Player;
             await _usersRepository.UpdateAsync(user);
 
-            await _botClient.SendTextMessageAsync(update.Message.Chat.Id, _localization["gameStarted"]);
+            await _messageSender.SendTo(user.Id, _localization["gameStarted"]);
             await _nextQuestionCommand.ExecuteAsync(update);
         }
     }

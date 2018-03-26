@@ -6,15 +6,13 @@
 
   <ItemGroup>
     <Compile Remove="logs\**" />
-    <Content Remove="logs\**" />
     <EmbeddedResource Remove="logs\**" />
     <None Remove="logs\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\Predicates\EmailCommandPredicate.cs" />
-    <Compile Remove="Filters\AuthenticationMiddleware.cs" />
-    <Compile Remove="Filters\LoggingFilter.cs" />
+    <Compile Remove="Helpers\InteractiveMessageSender.cs" />
+    <Compile Remove="Helpers\PureMessageSender.cs" />
     <Compile Remove="Services\UserService.cs" />
   </ItemGroup>
 

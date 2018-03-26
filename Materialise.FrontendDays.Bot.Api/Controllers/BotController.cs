@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Materialise.FrontendDays.Bot.Api.Commands;
+using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;

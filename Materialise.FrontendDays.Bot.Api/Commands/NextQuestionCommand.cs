@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Materialise.FrontendDays.Bot.Api.Builders;
+using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
+using Materialise.FrontendDays.Bot.Api.Helpers;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Materialise.FrontendDays.Bot.Api.Commands
@@ -13,21 +13,19 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
     {
         private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IDbRepository<Question> _questionRepository;
-        private readonly TelegramBotClient _botClient;
         private readonly GameFinishedCommand _gameFinishedCommand;
         private readonly ILogger<NextQuestionCommand> _logger;
-        private readonly IKeyboardBuilder _builder;
+        private readonly MessageSender _messageSender;
 
-        public NextQuestionCommand(TelegramBotClient botClient, IDbRepository<Question> questionRepository, 
+        public NextQuestionCommand(IDbRepository<Question> questionRepository, 
             IUserAnswerRepository userAnswerRepository, GameFinishedCommand gameFinishedCommand, 
-            ILogger<NextQuestionCommand> logger, IKeyboardBuilder builder)
+            ILogger<NextQuestionCommand> logger, MessageSender messageSender)
         {
-            _botClient = botClient;
             _questionRepository = questionRepository;
             _userAnswerRepository = userAnswerRepository;
             _gameFinishedCommand = gameFinishedCommand;
             _logger = logger;
-            _builder = builder;
+            _messageSender = messageSender;
         }
 
         public async Task ExecuteAsync(Update update)
@@ -50,13 +48,9 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 
                 await _userAnswerRepository.AddAsync(userAnswer);
 
-                foreach (var answer in question.PossibleAnswers)
-                {
-                    _builder.AddButtonsRow(answer.Text);
-                }
-
-                await _botClient.SendTextMessageAsync(update.Message.Chat.Id, question.Text, false, false, 0, 
-                    _builder.Build());
+                await _messageSender.SendTo(userId, question.Text, question.PossibleAnswers
+                    .Select(x => x.Text)
+                    .ToArray());
             }
             else
             {

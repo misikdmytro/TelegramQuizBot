@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Telegram.Bot.Types;
 
 namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates

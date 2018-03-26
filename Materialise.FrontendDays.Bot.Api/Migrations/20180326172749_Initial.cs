@@ -30,9 +30,9 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
                     ChatId = table.Column<long>(nullable: false),
                     Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
-                    IsWinner = table.Column<bool>(nullable: false),
+                    IsWinner = table.Column<bool>(nullable: false, defaultValue: false),
                     LastName = table.Column<string>(nullable: true),
-                    UserStatus = table.Column<int>(nullable: false),
+                    UserStatus = table.Column<int>(nullable: false, defaultValue: 0),
                     Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -48,7 +48,7 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     IsCorrect = table.Column<bool>(nullable: false),
                     QuestionId = table.Column<int>(nullable: false),
-                    Text = table.Column<string>(nullable: true)
+                    Text = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

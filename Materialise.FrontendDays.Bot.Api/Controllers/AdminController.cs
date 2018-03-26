@@ -81,8 +81,6 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
 
             _logger.LogDebug("DB updated");
 
-            await RemoveWinner();
-
             return Ok();
         }
 

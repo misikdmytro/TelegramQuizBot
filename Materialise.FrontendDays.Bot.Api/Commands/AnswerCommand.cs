@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Microsoft.Extensions.Logging;

@@ -30,7 +30,8 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
 
                     b.Property<int>("QuestionId");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -62,11 +63,15 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
 
                     b.Property<string>("FirstName");
 
-                    b.Property<bool>("IsWinner");
+                    b.Property<bool>("IsWinner")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName");
 
-                    b.Property<int>("UserStatus");
+                    b.Property<int>("UserStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Username");
 

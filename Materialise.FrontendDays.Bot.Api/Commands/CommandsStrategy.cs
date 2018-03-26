@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Materialise.FrontendDays.Bot.Api.Commands.Predicates;
+using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
+using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Telegram.Bot.Types;
 
 namespace Materialise.FrontendDays.Bot.Api.Commands
