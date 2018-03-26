@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Materialise.FrontendDays.Bot.Api.Commands;
@@ -9,12 +10,14 @@ using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Helpers;
+using Materialise.FrontendDays.Bot.Api.Mediator;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
 using Materialise.FrontendDays.Bot.Api.Services;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;
 using Materialise.FrontendDays.Bot.Api.Validators;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -153,6 +156,35 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<EmailValidator>().AsSelf();
 
             var admins = Configuration.GetSection("admins").Get<Admin[]>();
+
+            // mediator itself
+            builder
+                .RegisterType<MediatR.Mediator>()
+                .As<IMediator>()
+                .InstancePerLifetimeScope();
+
+            // request handlers
+            builder
+                .Register<SingleInstanceFactory>(ctx => {
+                    var c = ctx.Resolve<IComponentContext>();
+                    return t => c.TryResolve(t, out var o) ? o : null;
+                })
+                .InstancePerLifetimeScope();
+
+            // notification handlers
+            builder
+                .Register<MultiInstanceFactory>(ctx => {
+                    var c = ctx.Resolve<IComponentContext>();
+                    return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
+                })
+                .InstancePerLifetimeScope();
+
+            // finally register our custom code (individually, or via assembly scanning)
+            // - requests & handlers as transient, i.e. InstancePerDependency()
+            // - pre/post-processors as scoped/per-request, i.e. InstancePerLifetimeScope()
+            // - behaviors as transient, i.e. InstancePerDependency()
+            builder.RegisterAssemblyTypes(typeof(CheckStatusRequest).GetTypeInfo().Assembly)
+                .AsImplementedInterfaces();
 
             BasicAuthenticationFilter.Admins = admins;
 
