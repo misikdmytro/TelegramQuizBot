@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Extensions;
 using Materialise.FrontendDays.Bot.Api.Filters;
+using Materialise.FrontendDays.Bot.Api.Helpers;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot;
 
 namespace Materialise.FrontendDays.Bot.Api.Controllers
 {
@@ -23,23 +23,23 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
         private readonly IDbRepository<Answer> _answersRepository;
         private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IDbRepository<User> _userRepository;
-        private readonly TelegramBotClient _botClient;
+        private readonly MessageSender _messageSender;
         private readonly Localization _localization;
         private readonly ILogger<AdminController> _logger;
 
         public AdminController(Question[] questions, IDbRepository<Question> questionRepository,
             IDbRepository<Answer> answersRepository, IUserAnswerRepository userAnswerRepository,
-            IDbRepository<User> userRepository, TelegramBotClient botClient, Localization localization,
-            ILogger<AdminController> logger)
+            IDbRepository<User> userRepository, Localization localization,
+            ILogger<AdminController> logger, MessageSender messageSender)
         {
             _questions = questions;
             _questionRepository = questionRepository;
             _answersRepository = answersRepository;
             _userAnswerRepository = userAnswerRepository;
             _userRepository = userRepository;
-            _botClient = botClient;
             _localization = localization;
             _logger = logger;
+            _messageSender = messageSender;
         }
 
         [HttpGet]
@@ -150,8 +150,8 @@ namespace Materialise.FrontendDays.Bot.Api.Controllers
             foreach (var user in await _userRepository.FindAsync(x => true))
             {
                 tasks.Add(user.IsWinner
-                    ? _botClient.SendTextMessageAsync(user.ChatId, _localization["winner"])
-                    : _botClient.SendTextMessageAsync(user.ChatId, _localization["loser"]));
+                    ? _messageSender.SendTo(user.Id, _localization["winner"])
+                    : _messageSender.SendTo(user.Id, _localization["loser"]));
             }
 
             await Task.WhenAll(tasks);
