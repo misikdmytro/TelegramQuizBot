@@ -11,9 +11,11 @@ namespace Materialise.FrontendDays.Bot.Api.Configurations
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.User)
                 .WithMany()
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(x => x.UserId);
             builder.HasOne(x => x.Question)
                 .WithMany()
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(x => x.QuestionId);
             builder.Property(x => x.RealAnswer);
             builder.Property(x => x.IsCorrect);

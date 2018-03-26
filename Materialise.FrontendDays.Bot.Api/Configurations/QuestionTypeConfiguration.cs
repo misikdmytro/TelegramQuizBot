@@ -12,6 +12,7 @@ namespace Materialise.FrontendDays.Bot.Api.Configurations
             builder.Property(x => x.Text).IsRequired();
             builder.HasMany(x => x.PossibleAnswers)
                 .WithOne(x => x.Question)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(x => x.QuestionId);
         }
     }

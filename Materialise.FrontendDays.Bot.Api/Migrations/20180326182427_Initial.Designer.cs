@@ -12,7 +12,7 @@ using System;
 namespace Materialise.FrontendDays.Bot.Api.Migrations
 {
     [DbContext(typeof(BotContext))]
-    [Migration("20180326172749_Initial")]
+    [Migration("20180326182427_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("Materialise.FrontendDays.Bot.Api.Models.Question", b =>

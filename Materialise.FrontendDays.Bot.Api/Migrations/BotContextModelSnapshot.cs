@@ -37,7 +37,7 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("Materialise.FrontendDays.Bot.Api.Models.Question", b =>
