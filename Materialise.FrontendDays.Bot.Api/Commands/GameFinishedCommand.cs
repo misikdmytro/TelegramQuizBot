@@ -19,7 +19,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         private readonly MessageSender _messageSender;
 
         public GameFinishedCommand(IDbRepository<UserAnswer> userAnswerRepository,
-            Localization localization, ILogger<GameFinishedCommand> logger, 
+            Localization localization, ILogger<GameFinishedCommand> logger,
             IDbRepository<Models.User> useRepository, MessageSender messageSender)
         {
             _userAnswerRepository = userAnswerRepository;
@@ -33,26 +33,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         {
             var userId = update.Message.From.Id;
 
-            var isAllCorrect = (await _userAnswerRepository.FindAsync(x => x.UserId == userId))
-                .All(x => x.IsCorrect == true);
-
             var user = (await _useRepository.FindAsync(x => x.Id == userId))
                 .First();
 
-            if (isAllCorrect)
-            {
-                _logger.LogDebug($"User {userId} gives correct answers");
-                await _messageSender.SendTo(userId, _localization["allCorrectResponse"]);
+            await _messageSender.SendTo(userId, _localization["allCorrectResponse"]);
 
-                user.UserStatus = UserStatus.Answered;
-            }
-            else
-            {
-                _logger.LogDebug($"User {userId} gives some(all) incorrect answers");
-                await _messageSender.SendTo(userId, _localization["notAllCorrectResponse"]);
-
-                user.UserStatus = UserStatus.Failed;
-            }
+            user.UserStatus = UserStatus.Answered;
 
             await _useRepository.UpdateAsync(user);
         }

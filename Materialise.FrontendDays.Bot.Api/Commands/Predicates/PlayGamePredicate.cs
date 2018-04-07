@@ -24,7 +24,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates
             var user = (await _usersRepository.FindAsync(x => x.Id == update.Message.From.Id))
                 .FirstOrDefault();
 
-            return update.Message.Text.Equals("/play") && user?.UserStatus == UserStatus.ReadyForPlay;
+            return update.Message.Text.Equals("/play") && user?.UserStatus == UserStatus.NewUser;
         }
     }
 }

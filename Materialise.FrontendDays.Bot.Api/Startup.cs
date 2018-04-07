@@ -16,7 +16,6 @@ using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
 using Materialise.FrontendDays.Bot.Api.Services;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;
-using Materialise.FrontendDays.Bot.Api.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -68,12 +67,6 @@ namespace Materialise.FrontendDays.Bot.Api
                 return bot.InitializeAsync().Result;
             }).AsSelf().SingleInstance();
 
-            builder.RegisterType<RequestEmailPredicate>()
-                .AsSelf();
-
-            builder.RegisterType<ResponseEmailPredicate>()
-                .AsSelf();
-
             builder.RegisterType<StartPredicate>()
                 .AsSelf();
 
@@ -88,8 +81,6 @@ namespace Materialise.FrontendDays.Bot.Api
 
             builder.Register(context => new CommandsStrategy(context.Resolve<IComponentContext>(), new[]
                 {
-                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<RequestEmailPredicate>(), typeof(RequestEmailCommand)),
-                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<ResponseEmailPredicate>(), typeof(ResponseEmailCommand)),
                     new KeyValuePair<ICommandPredicate, Type>(context.Resolve<StartPredicate>(), typeof(StartCommand)),
                     new KeyValuePair<ICommandPredicate, Type>(context.Resolve<PlayGamePredicate>(), typeof(PlayGameCommand)),
                     new KeyValuePair<ICommandPredicate, Type>(context.Resolve<AnswerPredicate>(), typeof(AnswerCommand)),
@@ -113,12 +104,6 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<GameFinishedCommand>()
                 .AsSelf();
 
-            builder.RegisterType<RequestEmailCommand>()
-                .AsSelf();
-
-            builder.RegisterType<ResponseEmailCommand>()
-                .AsSelf();
-
             builder.RegisterType<DefaultCommand>()
                 .AsSelf();
 
@@ -131,7 +116,7 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<QuestionsRepository>()
                 .As<IDbRepository<Question>>();
 
-            builder.RegisterType<UserAnswerRepository>()
+            builder.RegisterType<DbRepository<UserAnswer>>()
                 .As<IDbRepository<UserAnswer>>();
 
             builder.RegisterType<UserRegistrationService>()
@@ -153,7 +138,6 @@ namespace Materialise.FrontendDays.Bot.Api
                 .SingleInstance();
 
             builder.RegisterType<MessageSender>().AsSelf();
-            builder.RegisterType<EmailValidator>().AsSelf();
 
             var admins = Configuration.GetSection("admins").Get<Admin[]>();
 

@@ -3,8 +3,6 @@
     public enum UserStatus
     {
         NewUser,
-        WaitForEmail,
-        ReadyForPlay,
         Player,
         Answered
     }

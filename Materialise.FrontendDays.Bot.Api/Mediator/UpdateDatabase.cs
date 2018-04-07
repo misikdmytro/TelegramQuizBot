@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Materialise.FrontendDays.Bot.Api.Extensions;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using MediatR;
@@ -21,16 +20,19 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
         private readonly IDbRepository<UserAnswer> _userAnswerRepository;
         private readonly ILogger<UpdateDatabaseHandler> _logger;
         private readonly IDbRepository<User> _userRepository;
+        private readonly IDbRepository<Category> _categoriesRepository;
 
         public UpdateDatabaseHandler(IDbRepository<Answer> answersRepository, 
             ILogger<UpdateDatabaseHandler> logger, IDbRepository<Question> questionRepository, 
-            IDbRepository<UserAnswer> userAnswerRepository, IDbRepository<User> userRepository)
+            IDbRepository<UserAnswer> userAnswerRepository, IDbRepository<User> userRepository, 
+            IDbRepository<Category> categoriesRepository)
         {
             _answersRepository = answersRepository;
             _logger = logger;
             _questionRepository = questionRepository;
             _userAnswerRepository = userAnswerRepository;
             _userRepository = userRepository;
+            _categoriesRepository = categoriesRepository;
         }
 
         public async Task Handle(UpdateDatabaseRequest request, CancellationToken cancellationToken)
@@ -47,6 +49,11 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
 
             var configuration = builder.Build();
 
+            foreach (var category in configuration.GetSection("categories").Get<Category[]>())
+            {
+                await _categoriesRepository.AddAsync(category);
+            }
+
             foreach (var question in configuration.GetSection("questions").Get<Question[]>())
             {
                 await _questionRepository.AddAsync(question);
@@ -56,10 +63,7 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
 
             foreach (var user in users)
             {
-                user.UserStatus = user.NeedEmailInfo()
-                    ? user.UserStatus
-                    : UserStatus.ReadyForPlay;
-
+                user.UserStatus = UserStatus.NewUser;
                 user.IsWinner = false;
 
                 await _userRepository.UpdateAsync(user);

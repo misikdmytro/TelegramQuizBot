@@ -9,6 +9,8 @@ namespace Materialise.FrontendDays.Bot.Api.Configurations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                .ValueGeneratedNever();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
         }

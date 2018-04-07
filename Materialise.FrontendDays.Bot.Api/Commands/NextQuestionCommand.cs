@@ -41,7 +41,9 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
                 var userAnswer = new UserAnswer
                 {
                     QuestionId = question.Id,
-                    UserId = userId
+                    UserId = userId,
+                    Answer = null,
+                    AnswerId = null
                 };
 
                 _logger.LogDebug($"User {userId} receives question {question.Id}");
