@@ -35,7 +35,7 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
 
             if (update?.Message?.Text == null)
             {
-                _logger.LogDebug("Incognito user send no message");
+                _logger.LogDebug("Incognito user sends no message");
                 return;
             }
 

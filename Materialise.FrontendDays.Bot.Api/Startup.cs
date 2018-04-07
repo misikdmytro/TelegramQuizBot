@@ -80,13 +80,15 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<DefaultPredicate>()
                 .AsSelf();
 
-            builder.Register(context => new CommandsStrategy(context.Resolve<IComponentContext>(), new[]
-                {
-                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<StartPredicate>(), typeof(StartCommand)),
-                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<PlayGamePredicate>(), typeof(PlayGameCommand)),
-                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<AnswerPredicate>(), typeof(AnswerCommand)),
-                    new KeyValuePair<ICommandPredicate, Type>(context.Resolve<DefaultPredicate>(), typeof(DefaultCommand))
-                }))
+            builder.Register(context => new CommandsStrategy(context.Resolve<IComponentContext>(), 
+                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<StartPredicate>(), 
+                    typeof(StartCommand)), 
+                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<PlayGamePredicate>(), 
+                    typeof(PlayGameCommand)), 
+                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<AnswerPredicate>(), 
+                    typeof(AnswerCommand)), 
+                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<DefaultPredicate>(), 
+                    typeof(DefaultCommand))))
                 .As<ICommandsStrategy>()
                 .SingleInstance();
 
@@ -149,16 +151,14 @@ namespace Materialise.FrontendDays.Bot.Api
                 .InstancePerLifetimeScope();
 
             // request handlers
-            builder
-                .Register<SingleInstanceFactory>(ctx => {
+            builder.Register<SingleInstanceFactory>(ctx => {
                     var c = ctx.Resolve<IComponentContext>();
                     return t => c.TryResolve(t, out var o) ? o : null;
                 })
                 .InstancePerLifetimeScope();
 
             // notification handlers
-            builder
-                .Register<MultiInstanceFactory>(ctx => {
+            builder.Register<MultiInstanceFactory>(ctx => {
                     var c = ctx.Resolve<IComponentContext>();
                     return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
                 })
@@ -189,11 +189,11 @@ namespace Materialise.FrontendDays.Bot.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            using (var context = new BotContext(serviceScope.ServiceProvider.GetRequiredService<DbContextOptions<BotContext>>()))
-            {
-                context.Database.Migrate();
-            }
+            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //using (var context = new BotContext(serviceScope.ServiceProvider.GetRequiredService<DbContextOptions<BotContext>>()))
+            //{
+            //    context.Database.Migrate();
+            //}
 
             app.UseMvc();
 

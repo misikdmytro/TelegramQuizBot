@@ -12,9 +12,9 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
     public class CommandsStrategy : ICommandsStrategy
     {
         private readonly IComponentContext _resolver;
-        private readonly IEnumerable<KeyValuePair<ICommandPredicate, Type>> _commands;
+        private readonly KeyValuePair<ICommandPredicate, Type>[] _commands;
 
-        public CommandsStrategy(IComponentContext resolver, IEnumerable<KeyValuePair<ICommandPredicate, Type>> commands)
+        public CommandsStrategy(IComponentContext resolver, params KeyValuePair<ICommandPredicate, Type>[] commands)
         {
             _resolver = resolver;
             _commands = commands;
