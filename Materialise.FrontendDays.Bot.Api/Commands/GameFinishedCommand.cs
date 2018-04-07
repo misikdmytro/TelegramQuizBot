@@ -12,13 +12,13 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class GameFinishedCommand : ICommand
     {
-        private readonly IUserAnswerRepository _userAnswerRepository;
+        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
         private readonly Localization _localization;
         private readonly ILogger<GameFinishedCommand> _logger;
         private readonly IDbRepository<Models.User> _useRepository;
         private readonly MessageSender _messageSender;
 
-        public GameFinishedCommand(IUserAnswerRepository userAnswerRepository,
+        public GameFinishedCommand(IDbRepository<UserAnswer> userAnswerRepository,
             Localization localization, ILogger<GameFinishedCommand> logger, 
             IDbRepository<Models.User> useRepository, MessageSender messageSender)
         {

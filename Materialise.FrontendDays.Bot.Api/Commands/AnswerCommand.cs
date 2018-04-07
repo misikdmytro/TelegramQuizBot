@@ -11,12 +11,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class AnswerCommand : ICommand
     {
-        private readonly IUserAnswerRepository _userAnswerRepository;
+        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
         private readonly IDbRepository<Answer> _answerRepository;
         private readonly NextQuestionCommand _nextQuestionCommand;
         private readonly ILogger<AnswerCommand> _logger;
 
-        public AnswerCommand(IUserAnswerRepository userAnswerRepository, IDbRepository<Answer> answerRepository,
+        public AnswerCommand(IDbRepository<UserAnswer> userAnswerRepository, IDbRepository<Answer> answerRepository,
             NextQuestionCommand nextQuestionCommand, ILogger<AnswerCommand> logger)
         {
             _userAnswerRepository = userAnswerRepository;
@@ -32,17 +32,16 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 
             _logger.LogDebug($"User {userId} answers {answer}");
 
-            var userAnswer = (await _userAnswerRepository.FindAsync(x => x.UserId == userId && x.IsCorrect == null))
+            var userAnswer = (await _userAnswerRepository.FindAsync(x => x.UserId == userId && x.Answer == null))
                 .First();
 
-            userAnswer.RealAnswer = answer;
+            var realAnswer = (await _answerRepository.FindAsync(
+                    x => x.Text.Equals(answer, StringComparison.InvariantCultureIgnoreCase)))
+                .First();
 
-            userAnswer.IsCorrect = (await _answerRepository
-                .FindAsync(x => x.QuestionId == userAnswer.QuestionId
-                                && x.Text.Equals(answer, StringComparison.InvariantCultureIgnoreCase)))
-                .Any(x => x.IsCorrect);
+            userAnswer.AnswerId = realAnswer.Id;
 
-            _logger.LogDebug("User answers " + (userAnswer.IsCorrect == true ? "correct" : "incorrect"));
+            _logger.LogDebug($"User answers {realAnswer.Text}");
 
             await _userAnswerRepository.UpdateAsync(userAnswer);
 

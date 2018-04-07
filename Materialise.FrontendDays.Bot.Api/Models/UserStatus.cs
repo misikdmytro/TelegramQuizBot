@@ -6,7 +6,6 @@
         WaitForEmail,
         ReadyForPlay,
         Player,
-        Answered,
-        Failed
+        Answered
     }
 }

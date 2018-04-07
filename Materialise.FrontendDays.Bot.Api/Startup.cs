@@ -132,7 +132,7 @@ namespace Materialise.FrontendDays.Bot.Api
                 .As<IDbRepository<Question>>();
 
             builder.RegisterType<UserAnswerRepository>()
-                .As<IUserAnswerRepository>();
+                .As<IDbRepository<UserAnswer>>();
 
             builder.RegisterType<UserRegistrationService>()
                 .As<IUserRegistrationService>();

@@ -11,14 +11,14 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class NextQuestionCommand : ICommand
     {
-        private readonly IUserAnswerRepository _userAnswerRepository;
+        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
         private readonly IDbRepository<Question> _questionRepository;
         private readonly GameFinishedCommand _gameFinishedCommand;
         private readonly ILogger<NextQuestionCommand> _logger;
         private readonly MessageSender _messageSender;
 
         public NextQuestionCommand(IDbRepository<Question> questionRepository, 
-            IUserAnswerRepository userAnswerRepository, GameFinishedCommand gameFinishedCommand, 
+            IDbRepository<UserAnswer> userAnswerRepository, GameFinishedCommand gameFinishedCommand, 
             ILogger<NextQuestionCommand> logger, MessageSender messageSender)
         {
             _questionRepository = questionRepository;
