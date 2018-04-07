@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Telegram.Bot;
 
 namespace Materialise.FrontendDays.Bot.Api
 {
@@ -65,7 +66,7 @@ namespace Materialise.FrontendDays.Bot.Api
             {
                 var bot = context.Resolve<ITelegramBot>();
                 return bot.InitializeAsync().Result;
-            }).AsSelf().SingleInstance();
+            }).As<ITelegramBotClient>().SingleInstance();
 
             builder.RegisterType<StartPredicate>()
                 .AsSelf();

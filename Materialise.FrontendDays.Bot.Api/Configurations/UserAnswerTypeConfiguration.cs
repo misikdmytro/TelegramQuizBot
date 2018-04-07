@@ -13,10 +13,6 @@ namespace Materialise.FrontendDays.Bot.Api.Configurations
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(x => x.UserId);
-            builder.HasOne(x => x.Question)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey(x => x.QuestionId);
             builder.HasOne(x => x.Answer)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)

@@ -1,6 +1,6 @@
 ﻿{
   "helloFormat": "Привет {0} {1}! Добро пожаловать в игру",
-  "allCorrectResponse": "Всё правильно",
+  "allCorrectResponse": "Всё правильно, {0}",
   "notAllCorrectResponse": "Что-то неправильно",
   "gameStarted": "Игра началась",
   "gamePlayed": "Ты уже играл!",

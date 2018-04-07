@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 
 namespace Materialise.FrontendDays.Bot.Api.Mediator
 {
@@ -12,10 +13,12 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
     public class CheckStatusHandler : IRequestHandler<CheckStatusRequest, string>
     {
         private readonly ILogger<CheckStatusHandler> _logger;
+        private readonly ITelegramBotClient _botClient; //just to connect to Telegram API
 
-        public CheckStatusHandler(ILogger<CheckStatusHandler> logger)
+        public CheckStatusHandler(ILogger<CheckStatusHandler> logger, ITelegramBotClient botClient)
         {
             _logger = logger;
+            _botClient = botClient;
         }
 
         public Task<string> Handle(CheckStatusRequest request, CancellationToken cancellationToken)

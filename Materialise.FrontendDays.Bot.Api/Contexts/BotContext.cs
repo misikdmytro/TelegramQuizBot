@@ -23,6 +23,7 @@ namespace Materialise.FrontendDays.Bot.Api.Contexts
             modelBuilder.ApplyConfiguration(new QuestionTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserAnswerTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AnswerTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryTypeConfiguration());
         }
     }
 }

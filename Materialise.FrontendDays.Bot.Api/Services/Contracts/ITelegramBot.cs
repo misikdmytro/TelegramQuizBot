@@ -5,6 +5,6 @@ namespace Materialise.FrontendDays.Bot.Api.Services.Contracts
 {
     public interface ITelegramBot
     {
-        Task<TelegramBotClient> InitializeAsync();
+        Task<ITelegramBotClient> InitializeAsync();
     }
 }

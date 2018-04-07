@@ -18,6 +18,7 @@ namespace Materialise.FrontendDays.Bot.Api.Configurations
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(x => x.CategoryId);
+            builder.Property(x => x.IsStub).IsRequired();
         }
     }
 }

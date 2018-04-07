@@ -5,28 +5,25 @@ using Materialise.FrontendDays.Bot.Api.Helpers;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Resources;
-using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 
 namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class GameFinishedCommand : ICommand
     {
-        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
         private readonly Localization _localization;
-        private readonly ILogger<GameFinishedCommand> _logger;
         private readonly IDbRepository<Models.User> _useRepository;
         private readonly MessageSender _messageSender;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public GameFinishedCommand(IDbRepository<UserAnswer> userAnswerRepository,
-            Localization localization, ILogger<GameFinishedCommand> logger,
-            IDbRepository<Models.User> useRepository, MessageSender messageSender)
+        public GameFinishedCommand(Localization localization,
+            IDbRepository<Models.User> useRepository, MessageSender messageSender, 
+            ICategoryRepository categoryRepository)
         {
-            _userAnswerRepository = userAnswerRepository;
             _localization = localization;
-            _logger = logger;
             _useRepository = useRepository;
             _messageSender = messageSender;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task ExecuteAsync(Update update)
@@ -36,7 +33,9 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
             var user = (await _useRepository.FindAsync(x => x.Id == userId))
                 .First();
 
-            await _messageSender.SendTo(userId, _localization["allCorrectResponse"]);
+            var category = await _categoryRepository.GetUserCategory(user.Id);
+
+            await _messageSender.SendTo(userId, string.Format(_localization["allCorrectResponse"], category));
 
             user.UserStatus = UserStatus.Answered;
 

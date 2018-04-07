@@ -9,7 +9,7 @@ namespace Materialise.FrontendDays.Bot.Api.Services
     public class TelegramBot : ITelegramBot
     {
         private readonly BotInfo _botInfo;
-        private TelegramBotClient _botClient;
+        private ITelegramBotClient _botClient;
 
         private readonly ILogger<TelegramBot> _logger;
 
@@ -19,7 +19,7 @@ namespace Materialise.FrontendDays.Bot.Api.Services
             _logger = logger;
         }
 
-        public async Task<TelegramBotClient> InitializeAsync()
+        public async Task<ITelegramBotClient> InitializeAsync()
         {
             if (_botClient == null)
             {

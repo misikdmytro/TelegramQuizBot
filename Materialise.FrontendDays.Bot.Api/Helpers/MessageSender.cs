@@ -11,11 +11,11 @@ namespace Materialise.FrontendDays.Bot.Api.Helpers
 {
     public class MessageSender
     {
-        private readonly TelegramBotClient _botClient;
+        private readonly ITelegramBotClient _botClient;
         private readonly ILogger<MessageSender> _logger;
         private readonly IDbRepository<User> _userRepository;
 
-        public MessageSender(TelegramBotClient botClient, ILogger<MessageSender> logger, 
+        public MessageSender(ITelegramBotClient botClient, ILogger<MessageSender> logger, 
             IDbRepository<User> userRepository)
         {
             _botClient = botClient;
