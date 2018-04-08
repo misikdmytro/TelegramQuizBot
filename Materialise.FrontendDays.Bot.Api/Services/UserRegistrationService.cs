@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Models;
-using Materialise.FrontendDays.Bot.Api.Repositories;
+using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;

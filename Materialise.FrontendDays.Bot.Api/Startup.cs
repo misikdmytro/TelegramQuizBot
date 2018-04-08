@@ -14,6 +14,7 @@ using Materialise.FrontendDays.Bot.Api.Helpers;
 using Materialise.FrontendDays.Bot.Api.Mediator;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
+using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Materialise.FrontendDays.Bot.Api.Resources;
 using Materialise.FrontendDays.Bot.Api.Services;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
-using Materialise.FrontendDays.Bot.Api.Repositories;
+using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Telegram.Bot.Types;
 using User = Materialise.FrontendDays.Bot.Api.Models.User;
 

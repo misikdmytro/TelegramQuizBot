@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Models;
+using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 

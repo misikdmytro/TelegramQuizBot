@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Models;
 
-namespace Materialise.FrontendDays.Bot.Api.Repositories
+namespace Materialise.FrontendDays.Bot.Api.Repositories.Contracts
 {
     public interface IDbRepository<TEntity>
         where TEntity: class, IIDentifiable

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Models;
-using Materialise.FrontendDays.Bot.Api.Repositories;
+using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
