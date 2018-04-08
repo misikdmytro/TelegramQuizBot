@@ -32,10 +32,10 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 
             var user = (await _useRepository.FindAsync(x => x.Id == userId))
                 .First();
-
             var category = await _categoryRepository.GetUserCategory(user.Id);
 
-            await _messageSender.SendTo(userId, string.Format(_localization["allCorrectResponse"], category));
+            await _messageSender.SendTo(userId, string.Format(_localization["allCorrectResponse"], 
+                category.Description));
 
             user.UserStatus = UserStatus.Answered;
 

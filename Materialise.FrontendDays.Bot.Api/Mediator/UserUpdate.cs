@@ -19,12 +19,12 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
 
     public class UserUpdateResponse : IRequestHandler<UserUpdateRequest>
     {
-        private readonly ICommandsStrategy _commandsStrategy;
+        private readonly ICommandsFactory _commandsFactory;
         private readonly ILogger<UserUpdateResponse> _logger;
 
-        public UserUpdateResponse(ICommandsStrategy commandsStrategy, ILogger<UserUpdateResponse> logger)
+        public UserUpdateResponse(ICommandsFactory commandsFactory, ILogger<UserUpdateResponse> logger)
         {
-            _commandsStrategy = commandsStrategy;
+            _commandsFactory = commandsFactory;
             _logger = logger;
         }
 
@@ -41,7 +41,7 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
 
             _logger.LogDebug($"User {userId} sends next message: '{update.Message.Text}'");
 
-            var command = await _commandsStrategy.ResolveAsync(update);
+            var command = await _commandsFactory.ResolveAsync(update);
             await command.ExecuteAsync(update);
         }
     }

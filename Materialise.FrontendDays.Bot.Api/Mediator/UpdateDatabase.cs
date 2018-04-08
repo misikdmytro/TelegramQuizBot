@@ -17,7 +17,7 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
     {
         private readonly IDbRepository<Question> _questionRepository;
         private readonly IDbRepository<Answer> _answersRepository;
-        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
+        private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly ILogger<UpdateDatabaseHandler> _logger;
         private readonly IDbRepository<User> _userRepository;
         private readonly IDbRepository<Category> _categoriesRepository;
@@ -25,7 +25,7 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
 
         public UpdateDatabaseHandler(IDbRepository<Answer> answersRepository, 
             ILogger<UpdateDatabaseHandler> logger, IDbRepository<Question> questionRepository, 
-            IDbRepository<UserAnswer> userAnswerRepository, IDbRepository<User> userRepository, 
+            IUserAnswerRepository userAnswerRepository, IDbRepository<User> userRepository, 
             IDbRepository<Category> categoriesRepository, IDbRepository<Answer> answerRepository)
         {
             _answersRepository = answersRepository;

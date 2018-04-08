@@ -11,12 +11,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class AnswerCommand : ICommand
     {
-        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
+        private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IDbRepository<Answer> _answerRepository;
         private readonly NextQuestionCommand _nextQuestionCommand;
         private readonly ILogger<AnswerCommand> _logger;
 
-        public AnswerCommand(IDbRepository<UserAnswer> userAnswerRepository, IDbRepository<Answer> answerRepository,
+        public AnswerCommand(IUserAnswerRepository userAnswerRepository, IDbRepository<Answer> answerRepository,
             NextQuestionCommand nextQuestionCommand, ILogger<AnswerCommand> logger)
         {
             _userAnswerRepository = userAnswerRepository;
@@ -32,7 +32,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 
             _logger.LogDebug($"User {userId} answers {answer}");
 
-            var userAnswer = (await _userAnswerRepository.FindAsync(x => x.UserId == userId && x.Answer == null))
+            var userAnswer = (await _userAnswerRepository.FindAsync(x => x.UserId == userId && x.Answer.IsStub))
                 .First();
 
             var realAnswer = (await _answerRepository.FindAsync(

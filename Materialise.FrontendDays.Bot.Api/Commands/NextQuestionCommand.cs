@@ -11,7 +11,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class NextQuestionCommand : ICommand
     {
-        private readonly IDbRepository<UserAnswer> _userAnswerRepository;
+        private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IDbRepository<Question> _questionRepository;
         private readonly GameFinishedCommand _gameFinishedCommand;
         private readonly ILogger<NextQuestionCommand> _logger;
@@ -19,7 +19,7 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         private readonly IDbRepository<Answer> _answerRepository;
 
         public NextQuestionCommand(IDbRepository<Question> questionRepository, 
-            IDbRepository<UserAnswer> userAnswerRepository, GameFinishedCommand gameFinishedCommand, 
+            IUserAnswerRepository userAnswerRepository, GameFinishedCommand gameFinishedCommand, 
             ILogger<NextQuestionCommand> logger, MessageSender messageSender, 
             IDbRepository<Answer> answerRepository)
         {
@@ -35,8 +35,9 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         {
             var userId = update.Message.From.Id;
 
-            var userAnswers = await _userAnswerRepository.FindAsync(x => x.UserId == userId);
-            var question = (await _questionRepository.FindAsync(x => userAnswers.All(a => a.Answer.IsStub)))
+            var answeredQuestions = await _userAnswerRepository.GetAnsweredQuestions(userId);
+
+            var question = (await _questionRepository.FindAsync(x => answeredQuestions.All(a => a.Id != x.Id)))
                 .FirstOrDefault();
 
             if (question != null)

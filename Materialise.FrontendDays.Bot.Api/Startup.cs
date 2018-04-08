@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -80,16 +81,38 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<DefaultPredicate>()
                 .AsSelf();
 
-            builder.Register(context => new CommandsStrategy(context.Resolve<IComponentContext>(), 
-                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<StartPredicate>(), 
-                    typeof(StartCommand)), 
-                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<PlayGamePredicate>(), 
-                    typeof(PlayGameCommand)), 
-                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<AnswerPredicate>(), 
-                    typeof(AnswerCommand)), 
-                new KeyValuePair<ICommandPredicate, Type>(context.Resolve<DefaultPredicate>(), 
-                    typeof(DefaultCommand))))
-                .As<ICommandsStrategy>()
+            builder.Register<CommandFactoryMethod>(context =>
+            {
+                var c = context.Resolve<IComponentContext>();
+
+                return async u =>
+                {
+                    var commands = new[]
+                    {
+                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<StartPredicate>(),
+                            typeof(StartCommand)),
+                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<PlayGamePredicate>(),
+                            typeof(PlayGameCommand)),
+                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<AnswerPredicate>(),
+                            typeof(AnswerCommand)),
+                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<DefaultPredicate>(),
+                            typeof(DefaultCommand))
+                    };
+
+                    foreach (var command in commands)
+                    {
+                        if (await command.Key.IsThisCommand(u))
+                        {
+                            return (ICommand)c.Resolve(command.Value);
+                        }
+                    }
+
+                    return (ICommand)c.Resolve(commands.First(x => x.Key.IsDefault).Value);
+                };
+            });
+
+            builder.RegisterType<CommandsFactory>()
+                .As<ICommandsFactory>()
                 .SingleInstance();
 
             builder.RegisterType<StartCommand>()
@@ -119,8 +142,8 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<QuestionsRepository>()
                 .As<IDbRepository<Question>>();
 
-            builder.RegisterType<DbRepository<UserAnswer>>()
-                .As<IDbRepository<UserAnswer>>();
+            builder.RegisterType<UserAnswerRepository>()
+                .As<IUserAnswerRepository>();
 
             builder.RegisterType<UserRegistrationService>()
                 .As<IUserRegistrationService>();
@@ -145,23 +168,24 @@ namespace Materialise.FrontendDays.Bot.Api
             var admins = Configuration.GetSection("admins").Get<Admin[]>();
 
             // mediator itself
-            builder
-                .RegisterType<MediatR.Mediator>()
+            builder.RegisterType<MediatR.Mediator>()
                 .As<IMediator>()
                 .InstancePerLifetimeScope();
 
             // request handlers
-            builder.Register<SingleInstanceFactory>(ctx => {
-                    var c = ctx.Resolve<IComponentContext>();
-                    return t => c.TryResolve(t, out var o) ? o : null;
-                })
+            builder.Register<SingleInstanceFactory>(ctx =>
+            {
+                var c = ctx.Resolve<IComponentContext>();
+                return t => c.TryResolve(t, out var o) ? o : null;
+            })
                 .InstancePerLifetimeScope();
 
             // notification handlers
-            builder.Register<MultiInstanceFactory>(ctx => {
-                    var c = ctx.Resolve<IComponentContext>();
-                    return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
-                })
+            builder.Register<MultiInstanceFactory>(ctx =>
+            {
+                var c = ctx.Resolve<IComponentContext>();
+                return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
+            })
                 .InstancePerLifetimeScope();
 
             // finally register our custom code (individually, or via assembly scanning)
