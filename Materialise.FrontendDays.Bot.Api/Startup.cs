@@ -11,6 +11,7 @@ using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Helpers;
+using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Mediator;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
@@ -151,6 +152,9 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<UserRegistrationService>()
                 .As<IUserRegistrationService>();
 
+            builder.RegisterType<MessageSender>()
+                .As<IMessageSender>();
+
             builder.Register(context => Configuration.GetSection("questions").Get<Question[]>())
                 .AsSelf();
 
@@ -166,7 +170,7 @@ namespace Materialise.FrontendDays.Bot.Api
                 .AsSelf()
                 .SingleInstance();
 
-            builder.RegisterType<IMessage>().AsSelf();
+            builder.RegisterType<IMessageSender>().AsSelf();
 
             var admins = Configuration.GetSection("admins").Get<Admin[]>();
 

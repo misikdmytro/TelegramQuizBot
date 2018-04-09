@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
-using Materialise.FrontendDays.Bot.Api.Helpers;
+using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Materialise.FrontendDays.Bot.Api.Resources;
@@ -17,12 +17,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         private readonly ILogger<PlayGameCommand> _logger;
         private readonly IDbRepository<Models.User> _usersRepository;
         private readonly IUserRegistrationService _registrationService;
-        private readonly IMessage _messageSender;
+        private readonly IMessageSender _messageSender;
 
         public PlayGameCommand(NextQuestionCommand nextQuestionCommand,
             Localization localization, ILogger<PlayGameCommand> logger,
             IDbRepository<Models.User> usersRepository,
-            IUserRegistrationService registrationService, IMessage messageSender)
+            IUserRegistrationService registrationService, IMessageSender messageSender)
         {
             _nextQuestionCommand = nextQuestionCommand;
             _localization = localization;

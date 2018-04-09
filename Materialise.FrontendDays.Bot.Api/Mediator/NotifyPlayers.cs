@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Controllers;
-using Materialise.FrontendDays.Bot.Api.Helpers;
+using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Materialise.FrontendDays.Bot.Api.Resources;
@@ -19,11 +19,11 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
     {
         private readonly IDbRepository<User> _userRepository;
         private readonly ILogger<AdminController> _logger;
-        private readonly IMessage _messageSender;
+        private readonly IMessageSender _messageSender;
         private readonly Localization _localization;
 
         public NotifyPlayersHandler(Localization localization, ILogger<AdminController> logger, 
-            IMessage messageSender, IDbRepository<User> userRepository)
+            IMessageSender messageSender, IDbRepository<User> userRepository)
         {
             _localization = localization;
             _logger = logger;

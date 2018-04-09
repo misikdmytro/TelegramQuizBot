@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
-using Materialise.FrontendDays.Bot.Api.Helpers;
+using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Microsoft.Extensions.Logging;
@@ -15,12 +15,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         private readonly IDbRepository<Question> _questionRepository;
         private readonly GameFinishedCommand _gameFinishedCommand;
         private readonly ILogger<NextQuestionCommand> _logger;
-        private readonly IMessage _messageSender;
+        private readonly IMessageSender _messageSender;
         private readonly IDbRepository<Answer> _answerRepository;
 
         public NextQuestionCommand(IDbRepository<Question> questionRepository, 
             IUserAnswerRepository userAnswerRepository, GameFinishedCommand gameFinishedCommand, 
-            ILogger<NextQuestionCommand> logger, IMessage messageSender, 
+            ILogger<NextQuestionCommand> logger, IMessageSender messageSender, 
             IDbRepository<Answer> answerRepository)
         {
             _questionRepository = questionRepository;

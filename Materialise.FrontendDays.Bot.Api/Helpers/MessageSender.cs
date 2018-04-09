@@ -10,13 +10,13 @@ using User = Materialise.FrontendDays.Bot.Api.Models.User;
 
 namespace Materialise.FrontendDays.Bot.Api.Helpers
 {
-    public class IMessage : IMessageSender
+    public class MessageSender : IMessageSender
     {
         private readonly ITelegramBotClient _botClient;
-        private readonly ILogger<IMessage> _logger;
+        private readonly ILogger<MessageSender> _logger;
         private readonly IDbRepository<User> _userRepository;
 
-        public IMessage(ITelegramBotClient botClient, ILogger<IMessage> logger, 
+        public MessageSender(ITelegramBotClient botClient, ILogger<MessageSender> logger, 
             IDbRepository<User> userRepository)
         {
             _botClient = botClient;

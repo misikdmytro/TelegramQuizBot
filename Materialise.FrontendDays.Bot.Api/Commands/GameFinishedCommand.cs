@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
 using Materialise.FrontendDays.Bot.Api.Helpers;
+using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Materialise.FrontendDays.Bot.Api.Resources;
@@ -13,11 +14,11 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
     {
         private readonly Localization _localization;
         private readonly IDbRepository<Models.User> _useRepository;
-        private readonly IMessage _messageSender;
+        private readonly IMessageSender _messageSender;
         private readonly ICategoryRepository _categoryRepository;
 
         public GameFinishedCommand(Localization localization,
-            IDbRepository<Models.User> useRepository, IMessage messageSender, 
+            IDbRepository<Models.User> useRepository, IMessageSender messageSender, 
             ICategoryRepository categoryRepository)
         {
             _localization = localization;
