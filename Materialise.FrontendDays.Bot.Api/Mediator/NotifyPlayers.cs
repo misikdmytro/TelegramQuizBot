@@ -19,11 +19,11 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
     {
         private readonly IDbRepository<User> _userRepository;
         private readonly ILogger<AdminController> _logger;
-        private readonly MessageSender _messageSender;
+        private readonly IMessage _messageSender;
         private readonly Localization _localization;
 
         public NotifyPlayersHandler(Localization localization, ILogger<AdminController> logger, 
-            MessageSender messageSender, IDbRepository<User> userRepository)
+            IMessage messageSender, IDbRepository<User> userRepository)
         {
             _localization = localization;
             _logger = logger;

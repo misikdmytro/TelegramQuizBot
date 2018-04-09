@@ -13,11 +13,11 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
     {
         private readonly Localization _localization;
         private readonly IDbRepository<Models.User> _useRepository;
-        private readonly MessageSender _messageSender;
+        private readonly IMessage _messageSender;
         private readonly ICategoryRepository _categoryRepository;
 
         public GameFinishedCommand(Localization localization,
-            IDbRepository<Models.User> useRepository, MessageSender messageSender, 
+            IDbRepository<Models.User> useRepository, IMessage messageSender, 
             ICategoryRepository categoryRepository)
         {
             _localization = localization;

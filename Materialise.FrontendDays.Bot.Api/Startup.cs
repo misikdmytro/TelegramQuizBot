@@ -96,6 +96,8 @@ namespace Materialise.FrontendDays.Bot.Api
                             typeof(PlayGameCommand)),
                         new KeyValuePair<ICommandPredicate, Type>(c.Resolve<AnswerPredicate>(),
                             typeof(AnswerCommand)),
+                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<StatsPredicate>(), 
+                            typeof(StatsCommand)), 
                         new KeyValuePair<ICommandPredicate, Type>(c.Resolve<DefaultPredicate>(),
                             typeof(DefaultCommand))
                     };
@@ -164,7 +166,7 @@ namespace Materialise.FrontendDays.Bot.Api
                 .AsSelf()
                 .SingleInstance();
 
-            builder.RegisterType<MessageSender>().AsSelf();
+            builder.RegisterType<IMessage>().AsSelf();
 
             var admins = Configuration.GetSection("admins").Get<Admin[]>();
 

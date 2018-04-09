@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
@@ -9,13 +10,13 @@ using User = Materialise.FrontendDays.Bot.Api.Models.User;
 
 namespace Materialise.FrontendDays.Bot.Api.Helpers
 {
-    public class MessageSender
+    public class IMessage : IMessageSender
     {
         private readonly ITelegramBotClient _botClient;
-        private readonly ILogger<MessageSender> _logger;
+        private readonly ILogger<IMessage> _logger;
         private readonly IDbRepository<User> _userRepository;
 
-        public MessageSender(ITelegramBotClient botClient, ILogger<MessageSender> logger, 
+        public IMessage(ITelegramBotClient botClient, ILogger<IMessage> logger, 
             IDbRepository<User> userRepository)
         {
             _botClient = botClient;

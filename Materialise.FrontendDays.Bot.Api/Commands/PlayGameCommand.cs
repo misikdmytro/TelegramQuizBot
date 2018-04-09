@@ -17,12 +17,12 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
         private readonly ILogger<PlayGameCommand> _logger;
         private readonly IDbRepository<Models.User> _usersRepository;
         private readonly IUserRegistrationService _registrationService;
-        private readonly MessageSender _messageSender;
+        private readonly IMessage _messageSender;
 
         public PlayGameCommand(NextQuestionCommand nextQuestionCommand,
             Localization localization, ILogger<PlayGameCommand> logger,
             IDbRepository<Models.User> usersRepository,
-            IUserRegistrationService registrationService, MessageSender messageSender)
+            IUserRegistrationService registrationService, IMessage messageSender)
         {
             _nextQuestionCommand = nextQuestionCommand;
             _localization = localization;

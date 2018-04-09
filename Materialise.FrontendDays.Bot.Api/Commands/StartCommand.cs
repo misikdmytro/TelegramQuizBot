@@ -11,10 +11,10 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
     {
         private readonly Localization _localization;
         private readonly IUserRegistrationService _registrationService;
-        private readonly MessageSender _messageSender;
+        private readonly IMessage _messageSender;
 
         public StartCommand(Localization localization, 
-            IUserRegistrationService registrationService, MessageSender messageSender)
+            IUserRegistrationService registrationService, IMessage messageSender)
         {
             _localization = localization;
             _registrationService = registrationService;

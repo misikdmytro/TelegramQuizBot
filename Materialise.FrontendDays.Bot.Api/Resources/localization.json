@@ -5,5 +5,7 @@
   "gameStarted": "Игра началась",
   "gamePlayed": "Ты уже играл!",
   "winner": "Ты выиграл!",
-  "loser": "Тебе не повезло :("
+  "loser": "Тебе не повезло :(",
+  "statsHeaderFormat": "На данный момент такие статы:\n",
+  "categoryInfoFormat": "\nКатегория {0} - {1} юзеров" 
 }
