@@ -19,15 +19,15 @@ namespace Materialise.FrontendDays.Bot.Api.Repositories
         {
             using (var context = GetContext())
             {
-                var usersGroup = context.UserAnswers
-                    .Where(x => x.User.UserStatus == UserStatus.Answered)
-                    .GroupBy(x => x.User);
+                var usersGroup = await GetAnswered(context)
+                    .GroupBy(x => x.User)
+                    .ToArrayAsync();
 
-                return await usersGroup
+                return usersGroup
                     .Select(x => new KeyValuePair<User, Category>(x.Key, x.GroupBy(g => g.Answer.Category)
                         .MaxBy(g => g.Count())
                         .Key))
-                    .ToArrayAsync();
+                    .ToArray();
             }
         }
 
@@ -35,13 +35,21 @@ namespace Materialise.FrontendDays.Bot.Api.Repositories
         {
             using (var context = GetContext())
             {
-                var userAnswers = context.UserAnswers
-                    .Where(x => x.UserId == userId && x.User.UserStatus == UserStatus.Answered);
+                var userAnswers = GetAnswered(context)
+                    .Where(x => x.UserId == userId);
 
                 return Task.FromResult(userAnswers.GroupBy(x => x.Answer.Category)
                     .MaxBy(x => x.Count())
-                    ?.Key);
+                    .Key);
             }
+        }
+
+        private IQueryable<UserAnswer> GetAnswered(BotContext context)
+        {
+            return context.UserAnswers
+                .Include(x => x.Answer)
+                .Include(x => x.Answer.Category)
+                .Where(x => x.User.UserStatus == UserStatus.Answered);
         }
     }
 }

@@ -17,8 +17,6 @@ namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates
             _usersRepository = usersRepository;
         }
 
-        public bool IsDefault => false;
-
         public async Task<bool> IsThisCommand(Update update)
         {
             var user = (await _usersRepository.FindAsync(x => x.Id == update.Message.From.Id))

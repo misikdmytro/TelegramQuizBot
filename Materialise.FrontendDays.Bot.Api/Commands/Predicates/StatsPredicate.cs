@@ -10,8 +10,6 @@ namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates
 {
     public class StatsPredicate : ICommandPredicate
     {
-        public bool IsDefault => false;
-
         private readonly IDbRepository<User> _usersRepository;
 
         public StatsPredicate(IDbRepository<User> usersRepository)

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\Predicates\DefaultPredicate.cs" />
     <Compile Remove="Configurations\StubAnswerTypeConfiguration.cs" />
     <Compile Remove="Helpers\InteractiveMessageSender.cs" />
     <Compile Remove="Helpers\PureMessageSender.cs" />

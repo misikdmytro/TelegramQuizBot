@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Materialise.FrontendDays.Bot.Api.Commands;
 using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
 using Materialise.FrontendDays.Bot.Api.Commands.Predicates;
-using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Helpers;
@@ -71,71 +69,12 @@ namespace Materialise.FrontendDays.Bot.Api
                 return bot.InitializeAsync().Result;
             }).As<ITelegramBotClient>().SingleInstance();
 
-            builder.RegisterType<StartPredicate>()
-                .AsSelf();
-
-            builder.RegisterType<PlayGamePredicate>()
-                .AsSelf();
-
-            builder.RegisterType<AnswerPredicate>()
-                .AsSelf();
-
-            builder.RegisterType<DefaultPredicate>()
-                .AsSelf();
-
-            builder.Register<CommandFactoryMethod>(context =>
-            {
-                var c = context.Resolve<IComponentContext>();
-
-                return async u =>
-                {
-                    var commands = new[]
-                    {
-                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<StartPredicate>(),
-                            typeof(StartCommand)),
-                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<PlayGamePredicate>(),
-                            typeof(PlayGameCommand)),
-                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<AnswerPredicate>(),
-                            typeof(AnswerCommand)),
-                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<StatsPredicate>(), 
-                            typeof(StatsCommand)), 
-                        new KeyValuePair<ICommandPredicate, Type>(c.Resolve<DefaultPredicate>(),
-                            typeof(DefaultCommand))
-                    };
-
-                    foreach (var command in commands)
-                    {
-                        if (await command.Key.IsThisCommand(u))
-                        {
-                            return (ICommand)c.Resolve(command.Value);
-                        }
-                    }
-
-                    return (ICommand)c.Resolve(commands.First(x => x.Key.IsDefault).Value);
-                };
-            });
+            RegisterPredicates(builder);
+            RegisterCommands(builder);
 
             builder.RegisterType<CommandsFactory>()
                 .As<ICommandsFactory>()
                 .SingleInstance();
-
-            builder.RegisterType<StartCommand>()
-                .AsSelf();
-
-            builder.RegisterType<AnswerCommand>()
-                .AsSelf();
-
-            builder.RegisterType<PlayGameCommand>()
-                .AsSelf();
-
-            builder.RegisterType<NextQuestionCommand>()
-                .AsSelf();
-
-            builder.RegisterType<GameFinishedCommand>()
-                .AsSelf();
-
-            builder.RegisterType<DefaultCommand>()
-                .AsSelf();
 
             builder.RegisterType<DbRepository<User>>()
                 .As<IDbRepository<User>>();
@@ -211,7 +150,6 @@ namespace Materialise.FrontendDays.Bot.Api
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -229,6 +167,45 @@ namespace Materialise.FrontendDays.Bot.Api
             app.UseMvc();
 
             app.UseAuthentication();
+        }
+
+        private void RegisterPredicates(ContainerBuilder builder)
+        {
+            builder.RegisterType<StartPredicate>()
+                .AsSelf();
+
+            builder.RegisterType<PlayGamePredicate>()
+                .AsSelf();
+
+            builder.RegisterType<AnswerPredicate>()
+                .AsSelf();
+
+            builder.RegisterType<StatsPredicate>()
+                .AsSelf();
+        }
+
+        private void RegisterCommands(ContainerBuilder builder)
+        {
+            builder.RegisterType<StartCommand>()
+                .AsSelf();
+
+            builder.RegisterType<AnswerCommand>()
+                .AsSelf();
+
+            builder.RegisterType<PlayGameCommand>()
+                .AsSelf();
+
+            builder.RegisterType<StatsCommand>()
+                .AsSelf();
+
+            builder.RegisterType<NextQuestionCommand>()
+                .AsSelf();
+
+            builder.RegisterType<GameFinishedCommand>()
+                .AsSelf();
+
+            builder.RegisterType<DefaultCommand>()
+                .AsSelf();
         }
     }
 }
