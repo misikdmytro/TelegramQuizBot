@@ -10,6 +10,9 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 {
     public class CommandsFactory : ICommandsFactory
     {
+        private const string PredicateSuffix = "Predicate";
+        private const string CommandSuffix = "Command";
+
         private readonly IComponentContext _resolver;
 
         public CommandsFactory(IComponentContext resolver)
@@ -29,10 +32,10 @@ namespace Materialise.FrontendDays.Bot.Api.Commands
 
                 if (await command.IsThisCommand(update))
                 {
-                    var rootName = type.Name.Remove(type.Name.IndexOf("Predicate",
+                    var rootName = type.Name.Remove(type.Name.IndexOf(PredicateSuffix,
                         StringComparison.Ordinal));
 
-                    var commandName = rootName + "Command";
+                    var commandName = rootName + CommandSuffix;
 
                     var commandType = GetType().Assembly
                         .GetTypes()

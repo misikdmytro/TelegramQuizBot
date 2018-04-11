@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Controllers;
 using Materialise.FrontendDays.Bot.Api.Helpers.Contracts;
 using Materialise.FrontendDays.Bot.Api.Models;
+using Materialise.FrontendDays.Bot.Api.Properties;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
-using Materialise.FrontendDays.Bot.Api.Resources;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -20,12 +20,10 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
         private readonly IDbRepository<User> _userRepository;
         private readonly ILogger<AdminController> _logger;
         private readonly IMessageSender _messageSender;
-        private readonly Localization _localization;
 
-        public NotifyPlayersHandler(Localization localization, ILogger<AdminController> logger, 
+        public NotifyPlayersHandler(ILogger<AdminController> logger, 
             IMessageSender messageSender, IDbRepository<User> userRepository)
         {
-            _localization = localization;
             _logger = logger;
             _messageSender = messageSender;
             _userRepository = userRepository;
@@ -40,8 +38,8 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
             foreach (var user in await _userRepository.FindAsync(x => true))
             {
                 tasks.Add(user.IsWinner
-                    ? _messageSender.SendTo(user.Id, _localization["winner"])
-                    : _messageSender.SendTo(user.Id, _localization["loser"]));
+                    ? _messageSender.SendTo(user.Id, Resources.Winner)
+                    : _messageSender.SendTo(user.Id, Resources.Loser));
             }
 
             await Task.WhenAll(tasks);

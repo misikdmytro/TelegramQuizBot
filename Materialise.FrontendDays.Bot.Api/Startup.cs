@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Materialise.FrontendDays.Bot.Api.Commands;
 using Materialise.FrontendDays.Bot.Api.Commands.Contracts;
-using Materialise.FrontendDays.Bot.Api.Commands.Predicates;
+using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
 using Materialise.FrontendDays.Bot.Api.Contexts;
 using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Helpers;
@@ -14,7 +15,6 @@ using Materialise.FrontendDays.Bot.Api.Mediator;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
-using Materialise.FrontendDays.Bot.Api.Resources;
 using Materialise.FrontendDays.Bot.Api.Services;
 using Materialise.FrontendDays.Bot.Api.Services.Contracts;
 using MediatR;
@@ -76,17 +76,7 @@ namespace Materialise.FrontendDays.Bot.Api
                 .As<ICommandsFactory>()
                 .SingleInstance();
 
-            builder.RegisterType<DbRepository<User>>()
-                .As<IDbRepository<User>>();
-
-            builder.RegisterType<DbRepository<Answer>>()
-                .As<IDbRepository<Answer>>();
-
-            builder.RegisterType<QuestionsRepository>()
-                .As<IDbRepository<Question>>();
-
-            builder.RegisterType<UserAnswerRepository>()
-                .As<IUserAnswerRepository>();
+            RegisterRepositories(builder);
 
             builder.RegisterType<UserRegistrationService>()
                 .As<IUserRegistrationService>();
@@ -103,11 +93,6 @@ namespace Materialise.FrontendDays.Bot.Api
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 return (DbContextOptions<BotContext>)optionsBuilder.Options;
             }).As<DbContextOptions<BotContext>>();
-
-            builder.RegisterType<Localization>()
-                .WithParameter("filename", "Materialise.FrontendDays.Bot.Api.Resources.localization.json")
-                .AsSelf()
-                .SingleInstance();
 
             builder.RegisterType<IMessageSender>().AsSelf();
 
@@ -158,12 +143,6 @@ namespace Materialise.FrontendDays.Bot.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            //using (var context = new BotContext(serviceScope.ServiceProvider.GetRequiredService<DbContextOptions<BotContext>>()))
-            //{
-            //    context.Database.Migrate();
-            //}
-
             app.UseMvc();
 
             app.UseAuthentication();
@@ -171,41 +150,36 @@ namespace Materialise.FrontendDays.Bot.Api
 
         private void RegisterPredicates(ContainerBuilder builder)
         {
-            builder.RegisterType<StartPredicate>()
-                .AsSelf();
-
-            builder.RegisterType<PlayGamePredicate>()
-                .AsSelf();
-
-            builder.RegisterType<AnswerPredicate>()
-                .AsSelf();
-
-            builder.RegisterType<StatsPredicate>()
-                .AsSelf();
+            builder.RegisterTypes(GetType().Assembly
+                .GetTypes()
+                .Where(t => typeof(ICommandPredicate).IsAssignableFrom(t))
+                .ToArray());
         }
 
         private void RegisterCommands(ContainerBuilder builder)
         {
-            builder.RegisterType<StartCommand>()
-                .AsSelf();
+            builder.RegisterTypes(GetType().Assembly
+                .GetTypes()
+                .Where(t => typeof(ICommand).IsAssignableFrom(t))
+                .ToArray());
+        }
 
-            builder.RegisterType<AnswerCommand>()
-                .AsSelf();
+        private void RegisterRepositories(ContainerBuilder builder)
+        {
+            builder.RegisterType<DbRepository<User>>()
+                .As<IDbRepository<User>>();
 
-            builder.RegisterType<PlayGameCommand>()
-                .AsSelf();
+            builder.RegisterType<DbRepository<Answer>>()
+                .As<IDbRepository<Answer>>();
 
-            builder.RegisterType<StatsCommand>()
-                .AsSelf();
+            builder.RegisterType<QuestionsRepository>()
+                .As<IDbRepository<Question>>();
 
-            builder.RegisterType<NextQuestionCommand>()
-                .AsSelf();
+            builder.RegisterType<UserAnswerRepository>()
+                .As<IUserAnswerRepository>();
 
-            builder.RegisterType<GameFinishedCommand>()
-                .AsSelf();
-
-            builder.RegisterType<DefaultCommand>()
-                .AsSelf();
+            builder.RegisterType<CategoryRepository>()
+                .As<ICategoryRepository>();
         }
     }
 }
