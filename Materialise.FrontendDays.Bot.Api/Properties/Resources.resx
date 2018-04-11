@@ -127,10 +127,10 @@
   </data>
   <data name="CategoryInfoFormat" xml:space="preserve">
     <value>
-	Категория {0} - {1} юзеров</value>
+	{0} программистов - {1}</value>
   </data>
   <data name="GameStarted" xml:space="preserve">
-    <value>Игра началась</value>
+    <value>Поехали!</value>
   </data>
   <data name="HelloFormat" xml:space="preserve">
     <value>Привет {0} {1}! Добро пожаловать в игру</value>
@@ -142,10 +142,10 @@
     <value>Для начала сыграй</value>
   </data>
   <data name="StatsHeaderFormat" xml:space="preserve">
-    <value>На данный момент такие статы:
+    <value>На данный момент вокруг тебя такие люди:
 	</value>
   </data>
   <data name="Winner" xml:space="preserve">
-    <value>Ты выиграл!</value>
+    <value>Ты выиграл! Подходи на сцену за призом</value>
   </data>
 </root>

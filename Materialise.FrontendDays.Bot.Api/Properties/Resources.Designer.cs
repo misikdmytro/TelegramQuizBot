@@ -61,7 +61,9 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Твоя категория - {0}\n\n{1}.
+        ///   Looks up a localized string similar to Твоя категория - {0}
+        ///	
+        ///	{1}.
         /// </summary>
         internal static string AllCorrectResponse {
             get {
@@ -79,7 +81,8 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \nКатегория {0} - {1} юзеров.
+        ///   Looks up a localized string similar to 
+        ///	{0} программистов - {1}.
         /// </summary>
         internal static string CategoryInfoFormat {
             get {
@@ -88,7 +91,7 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Игра началась.
+        ///   Looks up a localized string similar to Поехали!.
         /// </summary>
         internal static string GameStarted {
             get {
@@ -124,7 +127,8 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На данный момент такие статы:\n.
+        ///   Looks up a localized string similar to На данный момент вокруг тебя такие люди:
+        ///	.
         /// </summary>
         internal static string StatsHeaderFormat {
             get {
@@ -133,7 +137,7 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ты выиграл!.
+        ///   Looks up a localized string similar to Ты выиграл! Подходи на сцену за призом.
         /// </summary>
         internal static string Winner {
             get {
