@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -23,6 +24,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Telegram.Bot;
 
 namespace Materialise.FrontendDays.Bot.Api
@@ -84,9 +86,6 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterType<MessageSender>()
                 .As<IMessageSender>();
 
-            builder.Register(context => Configuration.GetSection("questions").Get<Question[]>())
-                .AsSelf();
-
             builder.Register(context =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder();
@@ -95,8 +94,6 @@ namespace Materialise.FrontendDays.Bot.Api
             }).As<DbContextOptions<BotContext>>();
 
             builder.RegisterType<IMessageSender>().AsSelf();
-
-            var admins = Configuration.GetSection("admins").Get<Admin[]>();
 
             // mediator itself
             builder.RegisterType<MediatR.Mediator>()
@@ -126,7 +123,7 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterAssemblyTypes(typeof(CheckStatusRequest).GetTypeInfo().Assembly)
                 .AsImplementedInterfaces();
 
-            BasicAuthenticationFilter.Admins = admins;
+            BasicAuthenticationFilter.Admins = JsonConvert.DeserializeObject<Admin[]>(File.ReadAllText("Data/admins.json"));
 
             builder.Populate(services);
 

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Models;
 using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Materialise.FrontendDays.Bot.Api.Mediator
 {
@@ -46,18 +46,12 @@ namespace Materialise.FrontendDays.Bot.Api.Mediator
             await _userAnswerRepository.ClearAsync();
             await _categoriesRepository.ClearAsync();
 
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-
-            var configuration = builder.Build();
-
-            foreach (var category in configuration.GetSection("categories").Get<Category[]>())
+            foreach (var category in JsonConvert.DeserializeObject<Category[]>(File.ReadAllText("Data/categories.json")))
             {
                 await _categoriesRepository.AddAsync(category);
             }
 
-            foreach (var question in configuration.GetSection("questions").Get<Question[]>())
+            foreach (var question in JsonConvert.DeserializeObject<Question[]>(File.ReadAllText("Data/questions.json")))
             {
                 await _questionRepository.AddAsync(question);
 
