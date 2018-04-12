@@ -1,26 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Materialise.FrontendDays.Bot.Api.Commands.Predicates.Contracts;
-using Materialise.FrontendDays.Bot.Api.Repositories.Contracts;
 using Telegram.Bot.Types;
 
 namespace Materialise.FrontendDays.Bot.Api.Commands.Predicates
 {
     public class StartPredicate : ICommandPredicate
     {
-        private readonly IDbRepository<Models.User> _usersRepository;
-
-        public StartPredicate(IDbRepository<Models.User> usersRepository)
+        public Task<bool> IsThisCommand(Update update)
         {
-            _usersRepository = usersRepository;
-        }
-
-        public async Task<bool> IsThisCommand(Update update)
-        {
-            var user = (await _usersRepository.FindAsync(x => x.Id == update.Message.From.Id))
-                .FirstOrDefault();
-
-            return user == null && update.Message.Text.Equals("/start");
+            return Task.FromResult(update.Message.Text.Equals("/start"));
         }
     }
 }

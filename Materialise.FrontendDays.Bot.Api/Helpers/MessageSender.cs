@@ -16,7 +16,7 @@ namespace Materialise.FrontendDays.Bot.Api.Helpers
         private readonly ILogger<MessageSender> _logger;
         private readonly IDbRepository<User> _userRepository;
 
-        public MessageSender(ITelegramBotClient botClient, ILogger<MessageSender> logger, 
+        public MessageSender(ITelegramBotClient botClient, ILogger<MessageSender> logger,
             IDbRepository<User> userRepository)
         {
             _botClient = botClient;
@@ -42,11 +42,12 @@ namespace Materialise.FrontendDays.Bot.Api.Helpers
             var keyboard = new ReplyKeyboardMarkup
             {
                 Keyboard = options
-                    .Select(o => new[] { new KeyboardButton(o) })
+                    .Select(o => new[] {new KeyboardButton(o)})
                     .ToArray()
             };
 
-            _logger.LogDebug($"Send next keyboard to user {userId}: '{message}'");
+            _logger.LogDebug($"Send next message to user {userId}: '{message}'");
+            _logger.LogDebug($"Next answers: {options.Aggregate(string.Empty, (s, s1) => s + ";" + s1)}");
 
             await _botClient.SendTextMessageAsync(user.ChatId, message, false, false, 0, keyboard);
         }
