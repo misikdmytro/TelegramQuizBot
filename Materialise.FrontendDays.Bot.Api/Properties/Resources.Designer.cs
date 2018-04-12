@@ -72,7 +72,7 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ты уже играл, чертила.
+        ///   Looks up a localized string similar to Ты уже играл.
         /// </summary>
         internal static string AlreadyPlayed {
             get {
