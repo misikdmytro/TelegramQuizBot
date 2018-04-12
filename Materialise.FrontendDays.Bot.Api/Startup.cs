@@ -68,7 +68,7 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.Register(context =>
             {
                 var bot = context.Resolve<ITelegramBot>();
-                return bot.InitializeAsync().Result;
+                return bot.InitializeAsync().GetAwaiter().GetResult();
             }).As<ITelegramBotClient>().SingleInstance();
 
             RegisterPredicates(builder);
