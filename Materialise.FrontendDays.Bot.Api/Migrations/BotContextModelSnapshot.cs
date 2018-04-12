@@ -78,8 +78,6 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
 
                     b.Property<long>("ChatId");
 
-                    b.Property<string>("Email");
-
                     b.Property<string>("FirstName");
 
                     b.Property<bool>("IsWinner")

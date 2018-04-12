@@ -123,7 +123,7 @@ namespace Materialise.FrontendDays.Bot.Api
             builder.RegisterAssemblyTypes(typeof(CheckStatusRequest).GetTypeInfo().Assembly)
                 .AsImplementedInterfaces();
 
-            BasicAuthenticationFilter.Admins = JsonConvert.DeserializeObject<Admin[]>(File.ReadAllText("Data/admins.json"));
+            BasicAuthenticationFilterAttribute.Admins = JsonConvert.DeserializeObject<Admin[]>(File.ReadAllText("Data/admins.json"));
 
             builder.Populate(services);
 

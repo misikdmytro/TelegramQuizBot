@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Materialise.FrontendDays.Bot.Api.Filters;
 using Materialise.FrontendDays.Bot.Api.Mediator;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Telegram.Bot.Types;
 namespace Materialise.FrontendDays.Bot.Api.Controllers
 {
     [Route("api/[controller]")]
+    [BotFilter]
     public class BotController : Controller
     {
         private readonly IMediator _mediator;

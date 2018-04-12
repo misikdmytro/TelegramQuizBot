@@ -39,7 +39,6 @@ namespace Materialise.FrontendDays.Bot.Api.Services
                 Username = update.Message.From.Username,
                 ChatId = update.Message.Chat.Id,
                 UserStatus = UserStatus.NewUser,
-                Email = string.Empty,
                 IsWinner = false
             };
 

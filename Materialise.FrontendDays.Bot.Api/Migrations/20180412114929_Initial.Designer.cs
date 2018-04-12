@@ -12,7 +12,7 @@ using System;
 namespace Materialise.FrontendDays.Bot.Api.Migrations
 {
     [DbContext(typeof(BotContext))]
-    [Migration("20180407163645_Initial")]
+    [Migration("20180412114929_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,8 +78,6 @@ namespace Materialise.FrontendDays.Bot.Api.Migrations
                     b.Property<int>("Id");
 
                     b.Property<long>("ChatId");
-
-                    b.Property<string>("Email");
 
                     b.Property<string>("FirstName");
 
