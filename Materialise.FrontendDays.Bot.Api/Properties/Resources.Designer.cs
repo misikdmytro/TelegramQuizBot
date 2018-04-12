@@ -100,7 +100,11 @@ namespace Materialise.FrontendDays.Bot.Api.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Привет {0} {1}! Добро пожаловать в игру.
+        ///   Looks up a localized string similar to Привет!
+        ///Предлагаем пройти наш несложный тест и узнать соответствует ли твоё второе Я первому.
+        ///Отвечай честно и результат покажет кто же твой «внутренний» программист.
+        ///Среди всех участников будет разыгран приз в конце конференции.
+        ///И еще ты сможешь узнать сколько таких как ты здесь собралось..
         /// </summary>
         internal static string HelloFormat {
             get {
